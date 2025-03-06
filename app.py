@@ -1,8 +1,9 @@
 from flask import Flask, jsonify
 from dotenv import load_dotenv
+from datetime import datetime, timedelta
 import os
 import requests
-from datetime import datetime, timedelta
+import json
 
 load_dotenv()
 
@@ -65,6 +66,38 @@ def get_dunfa_yesterday_total_items(character_info):
 
     return count_item_rarity(timeline_result)
 
+def dunfa_character_search(character_name):
+    dunfa_character_search_url = dunfa_basic_url + '/servers/all/characters'
+
+    params = {
+        'characterName': character_name,
+        'apikey': dunfa_api_key
+    }
+
+    # 캐릭터id 검색
+    response = requests.get(dunfa_character_search_url, params=params)
+
+    response_data = response.json()
+
+    character_server = response_data['rows']['serverId']
+    character_id = response_data['rows']['characterId']
+
+    return (character_id, character_server)
+    
+
+def dunfa_adventure_add(character_id, character_server):
+    dunfa_character_adventure_search_url = dunfa_basic_url + '/servers/' + character_server + '/characters/' + character_id
+
+    params = {
+        'apikey': dunfa_api_key
+    }
+
+    response = requests.get(dunfa_character_adventure_search_url, params=params).json()
+    adventure_data = {}
+
+    pass
+
+
 @app.route('/', methods=['GET'])
 def get_data():
     data = {
@@ -82,3 +115,4 @@ def get_data():
 
 if __name__ == '__main__':
     # app.run(debug=True)
+    dunfa_adventure_add('17814615494e191fa4b33eefb2ef3e1c', 'cain')
