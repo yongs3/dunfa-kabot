@@ -93,10 +93,30 @@ def dunfa_adventure_add(character_id, character_server):
     }
 
     response = requests.get(dunfa_character_adventure_search_url, params=params).json()
-    adventure_data = {}
+    
+    if response.status_code != 200:
+        return {'success': False, 'message': '캐릭터 정보를 가져오는데 실패했습니다.'}
+    
+    character_data = response.json()
+    ## response data example
+    # {
+    #     "serverId" : "cain",
+    #     "characterId" : "17814615494e191fa4b33eefb2ef3e1c",
+    #     "characterName" : "탭헌터",
+    #     "level" : 115,
+    #     "jobId" : "b9cb48777665de22c006fabaf9a560b3",
+    #     "jobGrowId" : "6d459bc74ba73ee4fe5cdc4655400193",
+    #     "jobName" : "아처",
+    #     "jobGrowName" : "眞 헌터",
+    #     "fame" : 59796,
+    #     "adventureName" : "엔당",
+    #     "guildId" : "89d2c686bcc1f7d1d21f78c3c89afeda",
+    #     "guildName" : "수정과"
+    # }
 
-    pass
+    ## add adventure data to db
 
+    
 
 @app.route('/', methods=['GET'])
 def get_data():
